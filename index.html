@@ -6,6 +6,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1220">
 <title>PaisaTrack Money Coach</title>
+ 
+<link rel="manifest" href="./manifest.json">
+
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+ 
 <style>
 *{box-sizing:border-box}
 body{margin:0;padding:16px;background:#0b1220;color:#f1f5f9;font-family:Arial,sans-serif}
@@ -333,5 +339,17 @@ $("csv").onclick=()=>{
 };
 render();
 </script>
+ 
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .catch((error) => {
+        console.error("PaisaTrack offline setup failed:", error);
+      });
+  });
+}
+</script>
+ 
 </body>
 </html>
