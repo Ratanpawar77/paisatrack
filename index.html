@@ -5,36 +5,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1220">
-<title>PaisaTrack</title>
+<title>PaisaTrack Money Coach</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b1220;color:#f1f5f9;font-family:Arial,sans-serif;padding:16px}
+body{margin:0;padding:16px;background:#0b1220;color:#f1f5f9;font-family:Arial,sans-serif}
 main{max-width:520px;margin:auto}
-h1{margin-bottom:5px}
-h2{font-size:18px}
-.muted,.small{color:#9ca9bc;font-size:13px}
-.card{background:#182438;padding:16px;border-radius:15px;margin:15px 0}
-.amount{font-size:22px;font-weight:bold;margin:8px 0;overflow-wrap:anywhere}
-.green{color:#4ade80}.red{color:#fb7185}
+h1{margin-bottom:5px}h2{font-size:18px}
+.muted,small{color:#a6b3c7}
+.card{background:#182438;border:1px solid #29374d;padding:16px;border-radius:16px;margin:14px 0}
 label{display:block;font-size:13px;color:#bdc8d8;margin-top:12px}
 input,select,button{width:100%;padding:12px;margin-top:8px;border-radius:9px;font:inherit}
 input,select{background:#0b1220;color:white;border:1px solid #40506a}
-button{background:#7167f9;color:white;border:0;font-weight:bold;cursor:pointer}
-.secondary{background:#344157}
-.danger{background:#542532}
+button{background:#7772ff;color:white;border:0;font-weight:bold}
+.secondary{background:#344157}.danger{background:#542532}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#0e1828;border-radius:11px;padding:12px;min-width:0}
+.stat strong{display:block;font-size:19px;margin-top:8px;overflow-wrap:anywhere}
+.green{color:#4ade80}.red{color:#fb7185}
+.meter{height:10px;background:#344157;border-radius:20px;overflow:hidden;margin:12px 0}
+.fill{height:100%;background:#4ade80;width:0%;transition:width .2s}
 .item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #344157}
-.item:last-child{border:0}
-.item small{display:block;color:#9ca9bc;margin-top:5px}
-.actions{display:flex;gap:6px;margin-top:8px}
-.actions button{padding:8px 10px;margin:0;font-size:12px}
-.tabs{display:flex;gap:7px}
-.tabs button{background:#344157}
-.tabs button.active{background:#7167f9}
-.bar{height:7px;background:#344157;border-radius:8px;margin:7px 0 13px}
-.fill{height:100%;background:#8177ff;border-radius:8px}
-.empty{color:#9ca9bc;text-align:center;padding:18px 0}
-#status{font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.item small{display:block;margin-top:5px}
+.item button{width:auto;margin:7px 0 0;padding:7px 10px;font-size:12px}
+.tabs{display:flex;gap:7px}.tabs button{background:#344157}.tabs button.active{background:#7772ff}
+.actions{display:flex;gap:6px}
+.empty{padding:15px 0;color:#a6b3c7;text-align:center}
+.result{font-size:24px;font-weight:bold;margin:10px 0;overflow-wrap:anywhere}
+.notice{font-size:13px;line-height:1.5;color:#b8c4d8}
 </style>
 </head>
 <body>
@@ -43,20 +40,46 @@ button{background:#7167f9;color:white;border:0;font-weight:bold;cursor:pointer}
 <p class="muted">Your money. Your control.</p>
 
 <div class="card">
-<label for="month">Monthly report</label>
+<h2>📅 Monthly overview</h2>
+<label for="month">Choose month</label>
 <input id="month" type="month">
-<p class="small">Income this month</p>
-<div id="income" class="amount green">₹0</div>
-<p class="small">Expenses this month</p>
-<div id="expenses" class="amount red">₹0</div>
-<p class="small">Remaining balance</p>
-<div id="balance" class="amount">₹0</div>
+<div class="grid" style="margin-top:12px">
+<div class="stat"><small>Income</small><strong class="green" id="income">₹0</strong></div>
+<div class="stat"><small>Expenses</small><strong class="red" id="expenses">₹0</strong></div>
+</div>
+<div class="stat" style="margin-top:10px">
+<small>Remaining balance</small>
+<strong id="balance">₹0</strong>
+</div>
+</div>
+
+<div class="card">
+<h2>🎯 Salary Survival Meter</h2>
+<p class="notice">Based on the income and expenses you've recorded for the selected month.</p>
+<div class="meter"><div class="fill" id="meterFill"></div></div>
+<p id="meterText" class="notice">Add your transactions to get started.</p>
+<div class="grid">
+<div class="stat"><small>Estimated daily allowance</small><strong id="daily">₹0</strong></div>
+<div class="stat"><small>Days remaining</small><strong id="days">0</strong></div>
+</div>
+<p class="notice">This estimate does not include unrecorded bills, savings commitments or future income.</p>
+</div>
+
+<div class="card">
+<h2>🛒 Can I afford this?</h2>
+<p class="notice">Test a purchase before spending. This is a budget estimate, not a guarantee that you can afford it.</p>
+<label for="purchaseName">What do you want to buy?</label>
+<input id="purchaseName" maxlength="60" placeholder="e.g. New shoes">
+<label for="purchasePrice">Purchase price (₹)</label>
+<input id="purchasePrice" type="number" min="0.01" max="1000000000" step="0.01" placeholder="e.g. 1500">
+<button id="checkPurchase" type="button">Check affordability</button>
+<div id="purchaseResult" aria-live="polite" class="notice" style="margin-top:12px"></div>
 </div>
 
 <div class="card">
 <h2>➕ Add transaction</h2>
 <form id="form">
-<label for="type">Transaction type</label>
+<label for="type">Type</label>
 <select id="type"><option value="expense">Expense</option><option value="income">Income</option></select>
 <label for="amount">Amount (₹)</label>
 <input id="amount" type="number" min="0.01" max="1000000000" step="0.01" required placeholder="Enter amount">
@@ -71,8 +94,8 @@ button{background:#7167f9;color:white;border:0;font-weight:bold;cursor:pointer}
 <label for="note">Description</label>
 <input id="note" maxlength="80" placeholder="Optional note">
 <button type="submit">Save transaction</button>
+<p id="status" class="notice" role="status"></p>
 </form>
-<p id="status" role="status"></p>
 </div>
 
 <div class="card">
@@ -92,208 +115,165 @@ button{background:#7167f9;color:white;border:0;font-weight:bold;cursor:pointer}
 
 <div class="card">
 <h2>🛡️ Backup and restore</h2>
-<p class="small">Download a full JSON backup, or restore one saved earlier. Keep backups somewhere safe.</p>
 <button type="button" id="backup">Download JSON backup</button>
-<label for="restoreFile">Choose a JSON backup file</label>
+<label for="restoreFile">Choose JSON backup</label>
 <input id="restoreFile" type="file" accept=".json,application/json">
-<button type="button" id="restore" class="secondary">Validate and restore backup</button>
+<button type="button" id="restore" class="secondary">Validate and restore</button>
 <button type="button" id="csv" class="secondary">Export CSV</button>
-<p id="backupStatus" role="status" class="small"></p>
+<p id="backupStatus" class="notice" role="status"></p>
 </div>
-<p class="muted">PaisaTrack · Version 3</p>
+<p class="muted">PaisaTrack Money Coach · Version 4</p>
 </main>
 
 <script>
 const $=id=>document.getElementById(id);
 const KEY="paisatrack";
-const CATEGORIES=["Food","Travel","Shopping","Bills","Health","Education","Salary","Business","Other"];
-let data=[];
-let filter="all";
-let nextId=1;
+const CATS=["Food","Travel","Shopping","Bills","Health","Education","Salary","Business","Other"];
+let data=[],filter="all",nextId=1;
 
 function today(){
  const d=new Date();
- return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
-$("date").value=today();
 $("month").value=today().slice(0,7);
+$("date").value=today();
 
 function validDate(s){
  if(typeof s!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;
  const d=new Date(s+"T12:00:00");
- return !Number.isNaN(d.getTime())&&
+ return !isNaN(d.getTime())&&
  d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")===s;
-}
-function normalize(t){
- if(!t||typeof t!=="object")return null;
- const amount=Number(t.amount);
- if(!Number.isFinite(amount)||amount<=0||amount>1000000000)return null;
- if(t.type!=="income"&&t.type!=="expense")return null;
- if(typeof t.category!=="string"||!CATEGORIES.includes(t.category))return null;
- if(!validDate(t.date)||t.date>today())return null;
- if(t.note!==undefined&&typeof t.note!=="string")return null;
- return {
-  id:nextId++,
-  type:t.type,
-  amount:Math.round((amount+Number.EPSILON)*100)/100,
-  category:t.category,
-  date:t.date,
-  note:String(t.note||"").slice(0,80)
- };
 }
 function money(n){
  return new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(n);
 }
-function load(){
- try{
-  const raw=JSON.parse(localStorage.getItem(KEY)||"[]");
-  if(Array.isArray(raw)){
-   data=[];
-   raw.forEach(t=>{
-    const item=normalize(t);
-    if(item)data.push(item);
-   });
-  }
- }catch{data=[];}
+function normalize(t){
+ if(!t||typeof t!=="object")return null;
+ const amount=Number(t.amount);
+ if(!Number.isFinite(amount)||amount<=0||amount>1e9)return null;
+ if(!["income","expense"].includes(t.type))return null;
+ if(!CATS.includes(t.category)||!validDate(t.date)||t.date>today())return null;
+ if(t.note!==undefined&&typeof t.note!=="string")return null;
+ return {id:nextId++,type:t.type,amount:Math.round((amount+Number.EPSILON)*100)/100,
+ category:t.category,date:t.date,note:String(t.note||"").slice(0,80)};
 }
-function persist(){
- try{
-  localStorage.setItem(KEY,JSON.stringify(data));
-  render();
-  return true;
- }catch{
-  $("status").textContent="Could not save data. Export a backup and check browser storage.";
-  return false;
+try{
+ const old=JSON.parse(localStorage.getItem(KEY)||"[]");
+ if(Array.isArray(old)){
+  old.forEach(t=>{const n=normalize(t);if(n)data.push(n);});
  }
+}catch{}
+
+function save(){
+ try{localStorage.setItem(KEY,JSON.stringify(data));render();return true;}
+ catch{$("status").textContent="Could not save. Export your data and check browser storage.";return false;}
 }
+
+function selectedRows(){
+ const m=$("month").value;
+ return data.filter(t=>t.date.startsWith(m));
+}
+
 function render(){
- const month=$("month").value;
- const rows=data.filter(t=>t.date.startsWith(month));
+ const rows=selectedRows();
  const sum=type=>rows.filter(t=>t.type===type).reduce((s,t)=>s+t.amount,0);
- const inc=sum("income"),exp=sum("expense");
+ const inc=sum("income"),exp=sum("expense"),bal=inc-exp;
  $("income").textContent=money(inc);
  $("expenses").textContent=money(exp);
- $("balance").textContent=money(inc-exp);
- $("balance").className="amount "+(inc-exp<0?"red":"green");
+ $("balance").textContent=money(bal);
+ $("balance").className=bal<0?"red":"green";
 
- const cats={};
- rows.filter(t=>t.type==="expense").forEach(t=>{
-  cats[t.category]=(cats[t.category]||0)+t.amount;
- });
- const box=$("categories");
- box.replaceChildren();
- const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
- if(!entries.length){
-  box.className="empty";
-  box.textContent="No expenses this month.";
- }else{
-  box.className="";
-  entries.forEach(([name,value])=>{
-   const line=document.createElement("div");
-   line.className="item";
-   const n=document.createElement("span");
-   n.textContent=name;
-   const v=document.createElement("strong");
-   v.textContent=money(value);
+ const [year,month]=($("month").value||today().slice(0,7)).split("-").map(Number);
+ const lastDay=new Date(year,month,0).getDate();
+ const now=today();
+ const currentMonth=now.slice(0,7)===$("month").value;
+ const dayNum=currentMonth?Number(now.slice(8,10)):lastDay;
+ const remaining=Math.max(1,lastDay-dayNum+1);
+ const daily=bal>0?bal/remaining:0;
+ $("daily").textContent=money(daily);
+ $("days").textContent=String(remaining);
+ const used=inc>0?Math.min(100,Math.max(0,exp/inc*100)):0;
+ $("meterFill").style.width=used+"%";
+ $("meterFill").style.background=bal<0?"#fb7185":used>=80?"#fbbf24":"#4ade80";
+ $("meterText").textContent=inc<=0
+ ? "Record income to calculate your monthly spending ratio."
+ : bal<0?"Your recorded expenses exceed recorded income."
+ : used>=80?"Most of your recorded income has been spent. Review upcoming bills."
+ : "You've used "+used.toFixed(0)+"% of recorded monthly income. Remaining: "+money(bal)+".";
+
+ const totals={};
+ rows.filter(t=>t.type==="expense").forEach(t=>totals[t.category]=(totals[t.category]||0)+t.amount);
+ const cats=$("categories");cats.replaceChildren();
+ const entries=Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+ if(!entries.length){cats.className="empty";cats.textContent="No expenses this month.";}
+ else{
+  cats.className="";
+  entries.forEach(([name,val])=>{
+   const line=document.createElement("div");line.className="item";
+   const n=document.createElement("span");n.textContent=name;
+   const v=document.createElement("strong");v.textContent=money(val);
    line.append(n,v);
-   const bar=document.createElement("div");
-   bar.className="bar";
-   const fill=document.createElement("div");
-   fill.className="fill";
-   fill.style.width=(exp?value/exp*100:0)+"%";
-   bar.append(fill);
-   box.append(line,bar);
+   const bar=document.createElement("div");bar.className="meter";
+   const fill=document.createElement("div");fill.className="fill";
+   fill.style.width=(exp?val/exp*100:0)+"%";
+   bar.append(fill);cats.append(line,bar);
   });
  }
- const list=$("list");
- list.replaceChildren();
- const shown=data.filter(t=>(filter==="all"||t.type===filter)&&t.date.startsWith(month))
+
+ const list=$("list");list.replaceChildren();
+ const shown=rows.filter(t=>filter==="all"||t.type===filter)
  .sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
- if(!shown.length){
-  list.className="empty";
-  list.textContent="No transactions for this month.";
-  return;
- }
+ if(!shown.length){list.className="empty";list.textContent="No transactions for this month.";return;}
  list.className="";
  shown.forEach(t=>{
-  const item=document.createElement("div");
-  item.className="item";
+  const item=document.createElement("div");item.className="item";
   const left=document.createElement("div");
-  const name=document.createElement("strong");
-  name.textContent=t.note||t.category;
-  const meta=document.createElement("small");
-  meta.textContent=t.category+" · "+t.date;
+  const name=document.createElement("strong");name.textContent=t.note||t.category;
+  const meta=document.createElement("small");meta.textContent=t.category+" · "+t.date;
   left.append(name,meta);
-  const right=document.createElement("div");
-  right.style.textAlign="right";
-  const amount=document.createElement("div");
-  amount.className=t.type==="income"?"green":"red";
-  amount.textContent=(t.type==="income"?"+":"−")+money(t.amount);
-  const actions=document.createElement("div");
-  actions.className="actions";
-  const edit=document.createElement("button");
-  edit.type="button";edit.textContent="Edit";
+  const right=document.createElement("div");right.style.textAlign="right";
+  const val=document.createElement("div");val.className=t.type==="income"?"green":"red";
+  val.textContent=(t.type==="income"?"+":"−")+money(t.amount);
+  const actions=document.createElement("div");actions.className="actions";
+  const edit=document.createElement("button");edit.textContent="Edit";
   edit.onclick=()=>editTransaction(t.id);
-  const del=document.createElement("button");
-  del.type="button";del.textContent="Delete";del.className="danger";
+  const del=document.createElement("button");del.textContent="Delete";del.className="danger";
   del.onclick=()=>{
    if(!confirm("Delete this transaction?"))return;
-   const old=data;
-   data=data.filter(x=>x.id!==t.id);
-   if(!persist())data=old;
+   const old=data;data=data.filter(x=>x.id!==t.id);
+   if(!save())data=old;
   };
-  actions.append(edit,del);
-  right.append(amount,actions);
-  item.append(left,right);
-  list.append(item);
+  actions.append(edit,del);right.append(val,actions);item.append(left,right);list.append(item);
  });
 }
+
 function editTransaction(id){
- const t=data.find(x=>x.id===id);
- if(!t)return;
- const type=prompt("Type: income or expense",t.type);
- if(type===null)return;
- const newType=type.trim().toLowerCase();
- if(!["income","expense"].includes(newType)){alert("Type must be income or expense.");return;}
- const amountText=prompt("Amount in rupees",String(t.amount));
- if(amountText===null)return;
- const amount=Number(amountText);
- if(!Number.isFinite(amount)||amount<=0||amount>1000000000){alert("Invalid amount.");return;}
- const category=prompt("Category: "+CATEGORIES.join(", "),t.category);
- if(category===null)return;
- if(!CATEGORIES.includes(category.trim())){alert("Choose a category from the list.");return;}
- const date=prompt("Date (YYYY-MM-DD)",t.date);
- if(date===null)return;
- if(!validDate(date)||date>today()){alert("Enter a valid date, today or earlier.");return;}
- const note=prompt("Description (optional)",t.note||"");
- if(note===null)return;
+ const t=data.find(x=>x.id===id);if(!t)return;
+ const type=prompt("Type: income or expense",t.type);if(type===null)return;
+ if(!["income","expense"].includes(type.trim().toLowerCase())){alert("Invalid type.");return;}
+ const a=prompt("Amount in rupees",String(t.amount));if(a===null)return;
+ const amount=Number(a);if(!Number.isFinite(amount)||amount<=0||amount>1e9){alert("Invalid amount.");return;}
+ const cat=prompt("Category: "+CATS.join(", "),t.category);if(cat===null)return;
+ if(!CATS.includes(cat.trim())){alert("Invalid category.");return;}
+ const date=prompt("Date (YYYY-MM-DD)",t.date);if(date===null)return;
+ if(!validDate(date)||date>today()){alert("Invalid date.");return;}
+ const note=prompt("Description",t.note||"");if(note===null)return;
  const old=data.map(x=>({...x}));
- Object.assign(t,{type:newType,amount:Math.round((amount+Number.EPSILON)*100)/100,category:category.trim(),date,note:note.trim().slice(0,80)});
- if(!persist())data=old;
+ Object.assign(t,{type:type.trim().toLowerCase(),amount:Math.round(amount*100)/100,category:cat.trim(),date,note:note.trim().slice(0,80)});
+ if(!save())data=old;
 }
-function download(name,content,type){
- const url=URL.createObjectURL(new Blob([content],{type}));
- const a=document.createElement("a");
- a.href=url;a.download=name;a.click();
- setTimeout(()=>URL.revokeObjectURL(url),1500);
-}
+
 $("form").addEventListener("submit",e=>{
  e.preventDefault();
- const amount=Number($("amount").value);
- const date=$("date").value;
- if(!Number.isFinite(amount)||amount<=0||amount>1000000000||!validDate(date)||date>today()){
-  $("status").textContent="Enter a valid amount and date.";
-  return;
+ const amount=Number($("amount").value),date=$("date").value;
+ if(!Number.isFinite(amount)||amount<=0||amount>1e9||!validDate(date)||date>today()){
+  $("status").textContent="Enter a valid amount and date.";return;
  }
  const t=normalize({type:$("type").value,amount,category:$("category").value,date,note:$("note").value.trim()});
  if(!t)return;
- const old=data;
- data.push(t);
- if(persist()){
-  $("form").reset();
-  $("date").value=today();
-  $("status").textContent="Transaction saved.";
- }else data=old;
+ const old=data;data.push(t);
+ if(save()){$("form").reset();$("date").value=today();$("status").textContent="Transaction saved.";}
+ else data=old;
 });
 $("month").addEventListener("change",render);
 document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{
@@ -301,43 +281,56 @@ document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{
  document.querySelectorAll("[data-filter]").forEach(x=>x.classList.toggle("active",x===b));
  render();
 });
+
+$("checkPurchase").onclick=()=>{
+ const p=Number($("purchasePrice").value);
+ const name=$("purchaseName").value.trim()||"This purchase";
+ const bal=selectedRows().reduce((s,t)=>s+(t.type==="income"?t.amount:-t.amount),0);
+ const out=$("purchaseResult");
+ if(!Number.isFinite(p)||p<=0||p>1e9){out.textContent="Enter a valid purchase price.";return;}
+ const after=bal-p;
+ out.replaceChildren();
+ const title=document.createElement("strong");
+ title.textContent=after>=0?"It fits your recorded balance.":"It exceeds your recorded balance.";
+ title.className=after>=0?"green":"red";
+ const details=document.createElement("p");
+ details.textContent=name+": "+money(p)+". Estimated balance after purchase: "+money(after)+".";
+ const caveat=document.createElement("p");
+ caveat.className="notice";
+ caveat.textContent="This uses only recorded transactions for the selected month and does not account for unrecorded bills or emergencies.";
+ out.append(title,details,caveat);
+};
+
+function download(name,content,type){
+ const url=URL.createObjectURL(new Blob([content],{type}));
+ const a=document.createElement("a");a.href=url;a.download=name;a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
 $("backup").onclick=()=>{
- const payload={app:"PaisaTrack",version:1,exportedAt:new Date().toISOString(),transactions:data};
- download("paisatrack-backup.json",JSON.stringify(payload,null,2),"application/json");
- $("backupStatus").textContent="Backup download started. Keep this file safe.";
+ download("paisatrack-backup.json",JSON.stringify({app:"PaisaTrack",version:4,transactions:data},null,2),"application/json");
+ $("backupStatus").textContent="JSON backup download started. Keep it safe.";
 };
 $("restore").onclick=async()=>{
  const file=$("restoreFile").files[0];
- if(!file){$("backupStatus").textContent="Choose a JSON backup file first.";return;}
- if(file.size>5*1024*1024){$("backupStatus").textContent="File too large. Maximum size is 5 MB.";return;}
+ if(!file){$("backupStatus").textContent="Choose a JSON file first.";return;}
+ if(file.size>5*1024*1024){$("backupStatus").textContent="File is too large.";return;}
  try{
   const parsed=JSON.parse(await file.text());
   const items=Array.isArray(parsed)?parsed:parsed?.transactions;
-  if(!Array.isArray(items)||items.length>10000)throw Error("Invalid backup structure or too many records.");
-  nextId=1;
-  const restored=[];
-  for(const item of items){
-   const normalized=normalize(item);
-   if(!normalized)throw Error("Backup contains an invalid transaction. Nothing was changed.");
-   restored.push(normalized);
-  }
-  if(!confirm("Restore "+restored.length+" transactions? This replaces all current records on this browser. Export a backup first if needed."))return;
-  const old=data;
-  data=restored;
-  if(persist()){
-   $("backupStatus").textContent="Restore successful: "+data.length+" transactions.";
-   $("restoreFile").value="";
-  }else data=old;
- }catch(err){
-  $("backupStatus").textContent="Restore failed: "+(err.message||"Invalid JSON file.");
- }
+  if(!Array.isArray(items)||items.length>10000)throw Error("Invalid backup structure.");
+  nextId=1;const restored=[];
+  for(const t of items){const n=normalize(t);if(!n)throw Error("Invalid transaction. Nothing restored.");restored.push(n);}
+  if(!confirm("Replace current records with "+restored.length+" transactions? Download a backup first."))return;
+  const old=data;data=restored;
+  if(save()){$("backupStatus").textContent="Restore successful."; $("restoreFile").value="";}
+  else data=old;
+ }catch(e){$("backupStatus").textContent="Restore failed: "+e.message;}
 };
 $("csv").onclick=()=>{
  const rows=[["Type","Amount","Category","Date","Description"],...data.map(t=>[t.type,t.amount,t.category,t.date,t.note])];
  const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
  download("paisatrack-backup.csv","\uFEFF"+csv,"text/csv;charset=utf-8");
 };
-load();
 render();
 </script>
 </body>
