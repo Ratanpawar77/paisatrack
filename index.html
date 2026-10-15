@@ -1,185 +1,260 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PaisaTrack - Expense Tracker</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #0b1220;
-      color: white;
-    }
-    .container {
-      max-width: 450px;
-      margin: auto;
-    }
-    .card {
-      background: #182438;
-      padding: 18px;
-      border-radius: 15px;
-      margin: 15px 0;
-    }
-    input, select, button {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    input, select {
-      background: #0b1220;
-      color: white;
-      border: 1px solid #40506a;
-    }
-    button {
-      background: #7167f9;
-      color: white;
-      border: none;
-      font-weight: bold;
-    }
-    .green { color: #4ade80; }
-    .red { color: #fb7185; }
-    .transaction {
-      padding: 12px 0;
-      border-bottom: 1px solid #40506a;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>PaisaTrack</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1220;color:#f1f5f9;
+font-family:Arial,sans-serif;padding:18px}
+main{max-width:520px;margin:auto}
+h1{margin-bottom:5px}
+.muted{color:#9ca9bc;font-size:14px}
+.card{background:#182438;padding:17px;border-radius:16px;margin:16px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid .card{margin:0}
+.small{color:#aab6c8;font-size:13px}
+.amount{font-size:21px;font-weight:bold;margin-top:9px;overflow-wrap:anywhere}
+.green{color:#4ade80}.red{color:#fb7185}
+input,select,button{width:100%;padding:12px;margin-top:9px;
+border-radius:9px;font:inherit}
+input,select{background:#0b1220;color:white;border:1px solid #40506a}
+button{background:#7167f9;color:white;border:0;font-weight:bold}
+h2{font-size:18px}
+.item{padding:12px 0;border-bottom:1px solid #344157;
+display:flex;justify-content:space-between;gap:10px}
+.item:last-child{border:0}
+.item small{display:block;color:#9ca9bc;margin-top:5px}
+.item button{width:auto;padding:7px;background:#40202d;font-size:12px}
+.bar{height:8px;background:#344157;border-radius:8px;margin:8px 0 14px}
+.fill{height:100%;background:#8177ff;border-radius:8px}
+label{display:block;font-size:13px;margin-top:12px;color:#bdc8d8}
+.tabs{display:flex;gap:8px}
+.tabs button{background:#344157}
+.tabs button.active{background:#7167f9}
+.empty{color:#9ca9bc;text-align:center;padding:18px 0}
+</style>
 </head>
 <body>
-<div class="container">
-  <h1>💰 PaisaTrack</h1>
-  <p>Your money. Your control.</p>
+<main>
+<h1>💰 PaisaTrack</h1>
+<p class="muted">Your money. Your control.</p>
 
-  <div class="card">
-    <h3>Income</h3>
-    <h2 id="income" class="green">₹0</h2>
-    <h3>Expenses</h3>
-    <h2 id="expenses" class="red">₹0</h2>
-    <h3>Remaining Balance</h3>
-    <h2 id="balance">₹0</h2>
-  </div>
-
-  <div class="card">
-    <h2>Add Transaction</h2>
-    <form id="form">
-      <select id="type">
-        <option value="expense">Expense</option>
-        <option value="income">Income</option>
-      </select>
-      <input id="amount" type="number" min="0.01"
-        step="0.01" placeholder="Amount in ₹" required>
-      <select id="category">
-        <option>Food</option>
-        <option>Travel</option>
-        <option>Shopping</option>
-        <option>Bills</option>
-        <option>Salary</option>
-        <option>Other</option>
-      </select>
-      <input id="note" placeholder="Description (optional)">
-      <button type="submit">Add Transaction</button>
-    </form>
-  </div>
-
-  <div class="card">
-    <h2>Recent Transactions</h2>
-    <div id="list">No transactions yet.</div>
-  </div>
+<div class="card">
+<label for="month">Monthly report</label>
+<input type="month" id="month">
+<p class="small">Income this month</p>
+<div id="income" class="amount green">₹0</div>
+<p class="small">Expenses this month</p>
+<div id="expenses" class="amount red">₹0</div>
+<p class="small">Remaining balance</p>
+<div id="balance" class="amount">₹0</div>
 </div>
 
+<div class="card">
+<h2>➕ Add transaction</h2>
+<form id="form">
+<label for="type">Type</label>
+<select id="type">
+<option value="expense">Expense</option>
+<option value="income">Income</option>
+</select>
+<label for="amount">Amount (₹)</label>
+<input id="amount" type="number" min="0.01" step="0.01"
+placeholder="Enter amount" required>
+<label for="category">Category</label>
+<select id="category">
+<option>Food</option><option>Travel</option>
+<option>Shopping</option><option>Bills</option>
+<option>Health</option><option>Education</option>
+<option>Salary</option><option>Business</option><option>Other</option>
+</select>
+<label for="date">Date</label>
+<input id="date" type="date" required>
+<label for="note">Description</label>
+<input id="note" maxlength="80" placeholder="Optional note">
+<button type="submit">Save transaction</button>
+</form>
+</div>
+
+<div class="card">
+<h2>📊 Expense categories</h2>
+<div id="categories"></div>
+</div>
+
+<div class="card">
+<h2>🧾 Transactions</h2>
+<div class="tabs">
+<button type="button" data-filter="all" class="active">All</button>
+<button type="button" data-filter="expense">Expenses</button>
+<button type="button" data-filter="income">Income</button>
+</div>
+<div id="list"></div>
+<button id="export" type="button">Export CSV backup</button>
+</div>
+<p class="muted">PaisaTrack · Your personal finance tracker</p>
+</main>
+
 <script>
-  let transactions = [];
+const $=id=>document.getElementById(id);
+const KEY="paisatrack";
+let data=[];
+let filter="all";
 
-  try {
-    transactions = JSON.parse(
-      localStorage.getItem("paisatrack") || "[]"
-    );
-    if (!Array.isArray(transactions)) transactions = [];
-  } catch {
-    transactions = [];
-  }
+function today(){
+ const d=new Date();
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+$("date").value=today();
+$("month").value=today().slice(0,7);
 
-  const money = n => "₹" + n.toLocaleString("en-IN", {
-    maximumFractionDigits: 2
-  });
+try{
+ const saved=JSON.parse(localStorage.getItem(KEY)||"[]");
+ if(Array.isArray(saved))data=saved.filter(t=>
+  t&&typeof t.amount==="number"&&
+  (t.type==="income"||t.type==="expense")&&
+  typeof t.date==="string");
+}catch{data=[];}
 
-  function render() {
-    const income = transactions
-      .filter(t => t.type === "income")
-      .reduce((sum, t) => sum + t.amount, 0);
+const money=n=>new Intl.NumberFormat("en-IN",{
+ style:"currency",currency:"INR",maximumFractionDigits:2
+}).format(n);
 
-    const expenses = transactions
-      .filter(t => t.type === "expense")
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    document.getElementById("income").textContent = money(income);
-    document.getElementById("expenses").textContent = money(expenses);
-    document.getElementById("balance").textContent =
-      money(income - expenses);
-
-    const list = document.getElementById("list");
-    list.replaceChildren();
-
-    if (!transactions.length) {
-      list.textContent = "No transactions yet.";
-      return;
-    }
-
-    [...transactions].reverse().forEach((t, index) => {
-      const item = document.createElement("div");
-      item.className = "transaction";
-
-      const name = document.createElement("strong");
-      name.textContent = t.note || t.category;
-
-      const amount = document.createElement("p");
-      amount.className = t.type === "income" ? "green" : "red";
-      amount.textContent =
-        (t.type === "income" ? "+" : "-") + money(t.amount);
-
-      const del = document.createElement("button");
-      del.textContent = "Delete";
-      del.onclick = () => {
-        transactions.splice(transactions.length - 1 - index, 1);
-        save();
-      };
-
-      item.append(name, amount, del);
-      list.append(item);
-    });
-  }
-
-  function save() {
-    try {
-      localStorage.setItem("paisatrack", JSON.stringify(transactions));
-      render();
-    } catch {
-      alert("Unable to save data in this browser.");
-    }
-  }
-
-  document.getElementById("form").addEventListener("submit", e => {
-    e.preventDefault();
-
-    const amount = Number(document.getElementById("amount").value);
-    if (!Number.isFinite(amount) || amount <= 0) return;
-
-    transactions.push({
-      type: document.getElementById("type").value,
-      amount,
-      category: document.getElementById("category").value,
-      note: document.getElementById("note").value.trim()
-    });
-
-    save();
-    e.target.reset();
-  });
-
+function persist(){
+ try{
+  localStorage.setItem(KEY,JSON.stringify(data));
   render();
+  return true;
+ }catch{
+  alert("Could not save. Export your CSV backup and check browser storage.");
+  return false;
+ }
+}
+
+function render(){
+ const month=$("month").value;
+ const rows=data.filter(t=>t.date.startsWith(month));
+ const sum=(type,arr=rows)=>arr.filter(t=>t.type===type)
+  .reduce((s,t)=>s+t.amount,0);
+ const inc=sum("income"),exp=sum("expense");
+ $("income").textContent=money(inc);
+ $("expenses").textContent=money(exp);
+ $("balance").textContent=money(inc-exp);
+ $("balance").className="amount "+(inc-exp<0?"red":"green");
+
+ const cats={};
+ rows.filter(t=>t.type==="expense").forEach(t=>{
+  cats[t.category]=(cats[t.category]||0)+t.amount;
+ });
+ const catBox=$("categories");
+ catBox.replaceChildren();
+ const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+ if(!entries.length){
+  catBox.textContent="No expenses recorded for this month.";
+  catBox.className="empty";
+ }else{
+  catBox.className="";
+  entries.forEach(([name,value])=>{
+   const title=document.createElement("div");
+   title.className="item";
+   const left=document.createElement("span");
+   left.textContent=name;
+   const right=document.createElement("strong");
+   right.textContent=money(value);
+   title.append(left,right);
+   const bar=document.createElement("div");
+   bar.className="bar";
+   const fill=document.createElement("div");
+   fill.className="fill";
+   fill.style.width=(exp?value/exp*100:0)+"%";
+   bar.append(fill);
+   catBox.append(title,bar);
+  });
+ }
+
+ const list=$("list");
+ list.replaceChildren();
+ const shown=data.filter(t=>(filter==="all"||t.type===filter)&&
+  t.date.startsWith(month)).sort((a,b)=>b.date.localeCompare(a.date)||
+  (b.id||0)-(a.id||0));
+ if(!shown.length){
+  list.className="empty";
+  list.textContent="No transactions for this month.";
+ }else{
+  list.className="";
+  shown.forEach(t=>{
+   const item=document.createElement("div");
+   item.className="item";
+   const left=document.createElement("div");
+   const name=document.createElement("strong");
+   name.textContent=t.note||t.category;
+   const meta=document.createElement("small");
+   meta.textContent=t.category+" · "+t.date;
+   left.append(name,meta);
+   const right=document.createElement("div");
+   right.style.textAlign="right";
+   const val=document.createElement("div");
+   val.className=t.type==="income"?"green":"red";
+   val.textContent=(t.type==="income"?"+":"−")+money(t.amount);
+   const del=document.createElement("button");
+   del.textContent="Delete";
+   del.onclick=()=>{
+    if(confirm("Delete this transaction?")){
+     data=data.filter(x=>x.id!==t.id);
+     persist();
+    }
+   };
+   right.append(val,del);
+   item.append(left,right);
+   list.append(item);
+  });
+ }
+}
+
+$("form").addEventListener("submit",e=>{
+ e.preventDefault();
+ const amount=Number($("amount").value);
+ const date=$("date").value;
+ if(!Number.isFinite(amount)||amount<=0||!date||date>today()){
+  alert("Enter a positive amount and a valid date.");
+  return;
+ }
+ const entry={
+  id:Date.now(),type:$("type").value,amount:Math.round(amount*100)/100,
+  category:$("category").value,date,note:$("note").value.trim()
+ };
+ data.push(entry);
+ if(persist()){
+  $("form").reset();
+  $("date").value=today();
+ }
+});
+
+$("month").addEventListener("change",render);
+document.querySelectorAll("[data-filter]").forEach(b=>{
+ b.addEventListener("click",()=>{
+  filter=b.dataset.filter;
+  document.querySelectorAll("[data-filter]").forEach(x=>
+   x.classList.toggle("active",x===b));
+  render();
+ });
+});
+
+$("export").addEventListener("click",()=>{
+ const rows=[["Type","Amount","Category","Date","Description"],
+  ...data.map(t=>[t.type,t.amount,t.category,t.date,t.note||""])];
+ const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"')
+  .join(",")).join("\r\n");
+ const url=URL.createObjectURL(new Blob(["\uFEFF"+csv],
+  {type:"text/csv;charset=utf-8"}));
+ const a=document.createElement("a");
+ a.href=url;a.download="paisatrack-backup.csv";a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+render();
 </script>
 </body>
 </html>
