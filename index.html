@@ -1,1 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PaisaTrack - Expense Tracker</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #0b1220;
+      color: white;
+    }
+    .container {
+      max-width: 450px;
+      margin: auto;
+    }
+    .card {
+      background: #182438;
+      padding: 18px;
+      border-radius: 15px;
+      margin: 15px 0;
+    }
+    input, select, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    input, select {
+      background: #0b1220;
+      color: white;
+      border: 1px solid #40506a;
+    }
+    button {
+      background: #7167f9;
+      color: white;
+      border: none;
+      font-weight: bold;
+    }
+    .green { color: #4ade80; }
+    .red { color: #fb7185; }
+    .transaction {
+      padding: 12px 0;
+      border-bottom: 1px solid #40506a;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>💰 PaisaTrack</h1>
+  <p>Your money. Your control.</p>
 
+  <div class="card">
+    <h3>Income</h3>
+    <h2 id="income" class="green">₹0</h2>
+    <h3>Expenses</h3>
+    <h2 id="expenses" class="red">₹0</h2>
+    <h3>Remaining Balance</h3>
+    <h2 id="balance">₹0</h2>
+  </div>
+
+  <div class="card">
+    <h2>Add Transaction</h2>
+    <form id="form">
+      <select id="type">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+      <input id="amount" type="number" min="0.01"
+        step="0.01" placeholder="Amount in ₹" required>
+      <select id="category">
+        <option>Food</option>
+        <option>Travel</option>
+        <option>Shopping</option>
+        <option>Bills</option>
+        <option>Salary</option>
+        <option>Other</option>
+      </select>
+      <input id="note" placeholder="Description (optional)">
+      <button type="submit">Add Transaction</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Recent Transactions</h2>
+    <div id="list">No transactions yet.</div>
+  </div>
+</div>
+
+<script>
+  let transactions = [];
+
+  try {
+    transactions = JSON.parse(
+      localStorage.getItem("paisatrack") || "[]"
+    );
+    if (!Array.isArray(transactions)) transactions = [];
+  } catch {
+    transactions = [];
+  }
+
+  const money = n => "₹" + n.toLocaleString("en-IN", {
+    maximumFractionDigits: 2
+  });
+
+  function render() {
+    const income = transactions
+      .filter(t => t.type === "income")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const expenses = transactions
+      .filter(t => t.type === "expense")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    document.getElementById("income").textContent = money(income);
+    document.getElementById("expenses").textContent = money(expenses);
+    document.getElementById("balance").textContent =
+      money(income - expenses);
+
+    const list = document.getElementById("list");
+    list.replaceChildren();
+
+    if (!transactions.length) {
+      list.textContent = "No transactions yet.";
+      return;
+    }
+
+    [...transactions].reverse().forEach((t, index) => {
+      const item = document.createElement("div");
+      item.className = "transaction";
+
+      const name = document.createElement("strong");
+      name.textContent = t.note || t.category;
+
+      const amount = document.createElement("p");
+      amount.className = t.type === "income" ? "green" : "red";
+      amount.textContent =
+        (t.type === "income" ? "+" : "-") + money(t.amount);
+
+      const del = document.createElement("button");
+      del.textContent = "Delete";
+      del.onclick = () => {
+        transactions.splice(transactions.length - 1 - index, 1);
+        save();
+      };
+
+      item.append(name, amount, del);
+      list.append(item);
+    });
+  }
+
+  function save() {
+    try {
+      localStorage.setItem("paisatrack", JSON.stringify(transactions));
+      render();
+    } catch {
+      alert("Unable to save data in this browser.");
+    }
+  }
+
+  document.getElementById("form").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const amount = Number(document.getElementById("amount").value);
+    if (!Number.isFinite(amount) || amount <= 0) return;
+
+    transactions.push({
+      type: document.getElementById("type").value,
+      amount,
+      category: document.getElementById("category").value,
+      note: document.getElementById("note").value.trim()
+    });
+
+    save();
+    e.target.reset();
+  });
+
+  render();
+</script>
+</body>
+</html>
