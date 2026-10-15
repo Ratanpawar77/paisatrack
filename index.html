@@ -2,353 +2,836 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1220">
-<title>PaisaTrack Money Coach</title>
- 
-<link rel="manifest" href="./manifest.json">
-<meta name="mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
- 
-<style>
-*{box-sizing:border-box}
-body{margin:0;padding:16px;background:#0b1220;color:#f1f5f9;font-family:Arial,sans-serif}
-main{max-width:520px;margin:auto}
-h1{margin-bottom:5px}h2{font-size:18px}
-.muted,small{color:#a6b3c7}
-.card{background:#182438;border:1px solid #29374d;padding:16px;border-radius:16px;margin:14px 0}
-label{display:block;font-size:13px;color:#bdc8d8;margin-top:12px}
-input,select,button{width:100%;padding:12px;margin-top:8px;border-radius:9px;font:inherit}
-input,select{background:#0b1220;color:white;border:1px solid #40506a}
-button{background:#7772ff;color:white;border:0;font-weight:bold}
-.secondary{background:#344157}.danger{background:#542532}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:#0e1828;border-radius:11px;padding:12px;min-width:0}
-.stat strong{display:block;font-size:19px;margin-top:8px;overflow-wrap:anywhere}
-.green{color:#4ade80}.red{color:#fb7185}
-.meter{height:10px;background:#344157;border-radius:20px;overflow:hidden;margin:12px 0}
-.fill{height:100%;background:#4ade80;width:0%;transition:width .2s}
-.item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #344157}
-.item small{display:block;margin-top:5px}
-.item button{width:auto;margin:7px 0 0;padding:7px 10px;font-size:12px}
-.tabs{display:flex;gap:7px}.tabs button{background:#344157}.tabs button.active{background:#7772ff}
-.actions{display:flex;gap:6px}
-.empty{padding:15px 0;color:#a6b3c7;text-align:center}
-.result{font-size:24px;font-weight:bold;margin:10px 0;overflow-wrap:anywhere}
-.notice{font-size:13px;line-height:1.5;color:#b8c4d8}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123c2d">
+  <meta name="description" content="PaisaTrack helps you track income, salary, expenses and monthly savings.">
+  <title>PaisaTrack — Money Coach</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./Icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./Icons/icon-192.png">
+
+  <style>
+    :root {
+      --green: #123c2d;
+      --green2: #1c6848;
+      --light: #edf7f0;
+      --bg: #f4f7f5;
+      --text: #17251d;
+      --muted: #68766d;
+      --border: #dce5df;
+      --red: #b42318;
+      --white: #fff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--green);
+      color: white;
+      padding: 22px 16px;
+    }
+
+    .header-inner, main {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: #d9eee1;
+    }
+
+    main { padding: 16px; }
+
+    section {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 19px;
+      margin: 0 0 14px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin: 0 0 6px;
+    }
+
+    .muted, small { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--light);
+      min-width: 0;
+    }
+
+    .stat span {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+      overflow-wrap: anywhere;
+      margin-top: 4px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 12px 0 5px;
+    }
+
+    input, select, button {
+      width: 100%;
+      min-height: 44px;
+      border-radius: 9px;
+      font: inherit;
+    }
+
+    input, select {
+      padding: 10px;
+      border: 1px solid #cbd7ce;
+      background: white;
+      color: var(--text);
+    }
+
+    button {
+      padding: 10px 13px;
+      border: 0;
+      background: var(--green2);
+      color: white;
+      font-weight: 650;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    button.secondary {
+      background: #e9efeb;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    button.danger {
+      background: #fff0ef;
+      color: var(--red);
+      border: 1px solid #f2d0cc;
+    }
+
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid #8cc7a5;
+      outline-offset: 2px;
+    }
+
+    .notice {
+      margin: 10px 0 0;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .notice:empty { display: none; }
+
+    .positive { color: var(--green2); }
+    .negative { color: var(--red); }
+
+    progress {
+      width: 100%;
+      height: 14px;
+      margin: 10px 0;
+      accent-color: var(--green2);
+    }
+
+    .transaction {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 12px;
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .transaction p { margin: 3px 0; }
+    .transaction strong { overflow-wrap: anywhere; }
+    .transaction .amount { text-align: right; }
+    .transaction .amount strong { display: block; }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .actions button { margin-top: 8px; }
+
+    .hidden { display: none !important; }
+
+    footer {
+      text-align: center;
+      padding: 10px 16px 25px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (min-width: 600px) {
+      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 360px) {
+      main { padding: 10px; }
+      section { padding: 12px; }
+      .stat strong { font-size: 17px; }
+    }
+  </style>
 </head>
+
 <body>
-<main>
-<h1>💰 PaisaTrack</h1>
-<p class="muted">Your money. Your control.</p>
+  <header>
+    <div class="header-inner">
+      <h1>💚 PaisaTrack</h1>
+      <p>Your personal expense tracker and money coach</p>
+    </div>
+  </header>
 
-<div class="card">
-<h2>📅 Monthly overview</h2>
-<label for="month">Choose month</label>
-<input id="month" type="month">
-<div class="grid" style="margin-top:12px">
-<div class="stat"><small>Income</small><strong class="green" id="income">₹0</strong></div>
-<div class="stat"><small>Expenses</small><strong class="red" id="expenses">₹0</strong></div>
-</div>
-<div class="stat" style="margin-top:10px">
-<small>Remaining balance</small>
-<strong id="balance">₹0</strong>
-</div>
-</div>
+  <main>
+    <section>
+      <h2>Monthly Overview</h2>
 
-<div class="card">
-<h2>🎯 Salary Survival Meter</h2>
-<p class="notice">Based on the income and expenses you've recorded for the selected month.</p>
-<div class="meter"><div class="fill" id="meterFill"></div></div>
-<p id="meterText" class="notice">Add your transactions to get started.</p>
-<div class="grid">
-<div class="stat"><small>Estimated daily allowance</small><strong id="daily">₹0</strong></div>
-<div class="stat"><small>Days remaining</small><strong id="days">0</strong></div>
-</div>
-<p class="notice">This estimate does not include unrecorded bills, savings commitments or future income.</p>
-</div>
+      <label for="month">Choose month</label>
+      <input type="month" id="month">
 
-<div class="card">
-<h2>🛒 Can I afford this?</h2>
-<p class="notice">Test a purchase before spending. This is a budget estimate, not a guarantee that you can afford it.</p>
-<label for="purchaseName">What do you want to buy?</label>
-<input id="purchaseName" maxlength="60" placeholder="e.g. New shoes">
-<label for="purchasePrice">Purchase price (₹)</label>
-<input id="purchasePrice" type="number" min="0.01" max="1000000000" step="0.01" placeholder="e.g. 1500">
-<button id="checkPurchase" type="button">Check affordability</button>
-<div id="purchaseResult" aria-live="polite" class="notice" style="margin-top:12px"></div>
-</div>
+      <div class="stats" style="margin-top:14px">
+        <div class="stat">
+          <span>Income</span>
+          <strong id="income">₹0.00</strong>
+        </div>
+        <div class="stat">
+          <span>Expenses</span>
+          <strong id="expenses">₹0.00</strong>
+        </div>
+        <div class="stat">
+          <span>Balance</span>
+          <strong id="balance">₹0.00</strong>
+        </div>
+      </div>
+      <p id="overviewStatus" class="notice" role="status"></p>
+    </section>
 
-<div class="card">
-<h2>➕ Add transaction</h2>
-<form id="form">
-<label for="type">Type</label>
-<select id="type"><option value="expense">Expense</option><option value="income">Income</option></select>
-<label for="amount">Amount (₹)</label>
-<input id="amount" type="number" min="0.01" max="1000000000" step="0.01" required placeholder="Enter amount">
-<label for="category">Category</label>
-<select id="category">
-<option>Food</option><option>Travel</option><option>Shopping</option>
-<option>Bills</option><option>Health</option><option>Education</option>
-<option>Salary</option><option>Business</option><option>Other</option>
-</select>
-<label for="date">Date</label>
-<input id="date" type="date" required>
-<label for="note">Description</label>
-<input id="note" maxlength="80" placeholder="Optional note">
-<button type="submit">Save transaction</button>
-<p id="status" class="notice" role="status"></p>
-</form>
-</div>
+    <section>
+      <h2>Salary Survival Meter</h2>
+      <p class="muted">
+        See how much of your monthly income remains after recorded expenses.
+      </p>
 
-<div class="card">
-<h2>📊 Expense categories</h2>
-<div id="categories"></div>
-</div>
+      <div class="stats">
+        <div class="stat">
+          <span>Money remaining</span>
+          <strong id="remaining">₹0.00</strong>
+        </div>
+        <div class="stat">
+          <span>Income used</span>
+          <strong id="used">0%</strong>
+        </div>
+      </div>
 
-<div class="card">
-<h2>🧾 Transactions</h2>
-<div class="tabs">
-<button type="button" data-filter="all" class="active">All</button>
-<button type="button" data-filter="expense">Expenses</button>
-<button type="button" data-filter="income">Income</button>
-</div>
-<div id="list"></div>
-</div>
+      <progress id="salaryProgress" value="0" max="100"></progress>
+      <p id="salaryAdvice" class="muted">Add your salary and expenses to begin.</p>
+    </section>
 
-<div class="card">
-<h2>🛡️ Backup and restore</h2>
-<button type="button" id="backup">Download JSON backup</button>
-<label for="restoreFile">Choose JSON backup</label>
-<input id="restoreFile" type="file" accept=".json,application/json">
-<button type="button" id="restore" class="secondary">Validate and restore</button>
-<button type="button" id="csv" class="secondary">Export CSV</button>
-<p id="backupStatus" class="notice" role="status"></p>
-</div>
-<p class="muted">PaisaTrack Money Coach · Version 4</p>
-</main>
+    <section>
+      <h2>Add Income or Expense</h2>
 
-<script>
-const $=id=>document.getElementById(id);
-const KEY="paisatrack";
-const CATS=["Food","Travel","Shopping","Bills","Health","Education","Salary","Business","Other"];
-let data=[],filter="all",nextId=1;
+      <form id="form">
+        <div class="grid">
+          <div>
+            <label for="type">Transaction type</label>
+            <select id="type" required>
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+          </div>
 
-function today(){
- const d=new Date();
- return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-$("month").value=today().slice(0,7);
-$("date").value=today();
+          <div>
+            <label for="category">Category</label>
+            <select id="category" required>
+              <option>Food</option>
+              <option>Travel</option>
+              <option>Shopping</option>
+              <option>Bills</option>
+              <option>Health</option>
+              <option>Education</option>
+              <option>Salary</option>
+              <option>Business</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
 
-function validDate(s){
- if(typeof s!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;
- const d=new Date(s+"T12:00:00");
- return !isNaN(d.getTime())&&
- d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")===s;
-}
-function money(n){
- return new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(n);
-}
-function normalize(t){
- if(!t||typeof t!=="object")return null;
- const amount=Number(t.amount);
- if(!Number.isFinite(amount)||amount<=0||amount>1e9)return null;
- if(!["income","expense"].includes(t.type))return null;
- if(!CATS.includes(t.category)||!validDate(t.date)||t.date>today())return null;
- if(t.note!==undefined&&typeof t.note!=="string")return null;
- return {id:nextId++,type:t.type,amount:Math.round((amount+Number.EPSILON)*100)/100,
- category:t.category,date:t.date,note:String(t.note||"").slice(0,80)};
-}
-try{
- const old=JSON.parse(localStorage.getItem(KEY)||"[]");
- if(Array.isArray(old)){
-  old.forEach(t=>{const n=normalize(t);if(n)data.push(n);});
- }
-}catch{}
+        <label for="amount">Amount (₹)</label>
+        <input
+          id="amount"
+          type="number"
+          min="0.01"
+          max="1000000000"
+          step="0.01"
+          inputmode="decimal"
+          placeholder="Enter amount"
+          required
+        >
 
-function save(){
- try{localStorage.setItem(KEY,JSON.stringify(data));render();return true;}
- catch{$("status").textContent="Could not save. Export your data and check browser storage.";return false;}
-}
+        <label for="date">Transaction date</label>
+        <input id="date" type="date" required>
 
-function selectedRows(){
- const m=$("month").value;
- return data.filter(t=>t.date.startsWith(m));
-}
+        <label for="note">Description (optional)</label>
+        <input id="note" type="text" maxlength="80" placeholder="e.g. October salary">
 
-function render(){
- const rows=selectedRows();
- const sum=type=>rows.filter(t=>t.type===type).reduce((s,t)=>s+t.amount,0);
- const inc=sum("income"),exp=sum("expense"),bal=inc-exp;
- $("income").textContent=money(inc);
- $("expenses").textContent=money(exp);
- $("balance").textContent=money(bal);
- $("balance").className=bal<0?"red":"green";
+        <button id="saveButton" type="submit">Save transaction</button>
+        <p id="status" class="notice" role="status" aria-live="polite"></p>
+      </form>
 
- const [year,month]=($("month").value||today().slice(0,7)).split("-").map(Number);
- const lastDay=new Date(year,month,0).getDate();
- const now=today();
- const currentMonth=now.slice(0,7)===$("month").value;
- const dayNum=currentMonth?Number(now.slice(8,10)):lastDay;
- const remaining=Math.max(1,lastDay-dayNum+1);
- const daily=bal>0?bal/remaining:0;
- $("daily").textContent=money(daily);
- $("days").textContent=String(remaining);
- const used=inc>0?Math.min(100,Math.max(0,exp/inc*100)):0;
- $("meterFill").style.width=used+"%";
- $("meterFill").style.background=bal<0?"#fb7185":used>=80?"#fbbf24":"#4ade80";
- $("meterText").textContent=inc<=0
- ? "Record income to calculate your monthly spending ratio."
- : bal<0?"Your recorded expenses exceed recorded income."
- : used>=80?"Most of your recorded income has been spent. Review upcoming bills."
- : "You've used "+used.toFixed(0)+"% of recorded monthly income. Remaining: "+money(bal)+".";
+      <p class="muted">
+        To record salary, select <strong>Income</strong>, choose
+        <strong>Salary</strong>, enter the amount and date, then save.
+      </p>
+    </section>
 
- const totals={};
- rows.filter(t=>t.type==="expense").forEach(t=>totals[t.category]=(totals[t.category]||0)+t.amount);
- const cats=$("categories");cats.replaceChildren();
- const entries=Object.entries(totals).sort((a,b)=>b[1]-a[1]);
- if(!entries.length){cats.className="empty";cats.textContent="No expenses this month.";}
- else{
-  cats.className="";
-  entries.forEach(([name,val])=>{
-   const line=document.createElement("div");line.className="item";
-   const n=document.createElement("span");n.textContent=name;
-   const v=document.createElement("strong");v.textContent=money(val);
-   line.append(n,v);
-   const bar=document.createElement("div");bar.className="meter";
-   const fill=document.createElement("div");fill.className="fill";
-   fill.style.width=(exp?val/exp*100:0)+"%";
-   bar.append(fill);cats.append(line,bar);
-  });
- }
+    <section>
+      <h2>Affordability Simulator</h2>
+      <p class="muted">Check the impact of a planned purchase on your selected month's balance.</p>
 
- const list=$("list");list.replaceChildren();
- const shown=rows.filter(t=>filter==="all"||t.type===filter)
- .sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
- if(!shown.length){list.className="empty";list.textContent="No transactions for this month.";return;}
- list.className="";
- shown.forEach(t=>{
-  const item=document.createElement("div");item.className="item";
-  const left=document.createElement("div");
-  const name=document.createElement("strong");name.textContent=t.note||t.category;
-  const meta=document.createElement("small");meta.textContent=t.category+" · "+t.date;
-  left.append(name,meta);
-  const right=document.createElement("div");right.style.textAlign="right";
-  const val=document.createElement("div");val.className=t.type==="income"?"green":"red";
-  val.textContent=(t.type==="income"?"+":"−")+money(t.amount);
-  const actions=document.createElement("div");actions.className="actions";
-  const edit=document.createElement("button");edit.textContent="Edit";
-  edit.onclick=()=>editTransaction(t.id);
-  const del=document.createElement("button");del.textContent="Delete";del.className="danger";
-  del.onclick=()=>{
-   if(!confirm("Delete this transaction?"))return;
-   const old=data;data=data.filter(x=>x.id!==t.id);
-   if(!save())data=old;
-  };
-  actions.append(edit,del);right.append(val,actions);item.append(left,right);list.append(item);
- });
-}
+      <label for="purchase">Planned purchase amount (₹)</label>
+      <input id="purchase" type="number" min="0" max="1000000000"
+        step="0.01" inputmode="decimal" placeholder="Enter purchase amount">
 
-function editTransaction(id){
- const t=data.find(x=>x.id===id);if(!t)return;
- const type=prompt("Type: income or expense",t.type);if(type===null)return;
- if(!["income","expense"].includes(type.trim().toLowerCase())){alert("Invalid type.");return;}
- const a=prompt("Amount in rupees",String(t.amount));if(a===null)return;
- const amount=Number(a);if(!Number.isFinite(amount)||amount<=0||amount>1e9){alert("Invalid amount.");return;}
- const cat=prompt("Category: "+CATS.join(", "),t.category);if(cat===null)return;
- if(!CATS.includes(cat.trim())){alert("Invalid category.");return;}
- const date=prompt("Date (YYYY-MM-DD)",t.date);if(date===null)return;
- if(!validDate(date)||date>today()){alert("Invalid date.");return;}
- const note=prompt("Description",t.note||"");if(note===null)return;
- const old=data.map(x=>({...x}));
- Object.assign(t,{type:type.trim().toLowerCase(),amount:Math.round(amount*100)/100,category:cat.trim(),date,note:note.trim().slice(0,80)});
- if(!save())data=old;
-}
+      <button type="button" id="simulate">Check affordability</button>
+      <p id="simulation" class="notice" role="status"></p>
+    </section>
 
-$("form").addEventListener("submit",e=>{
- e.preventDefault();
- const amount=Number($("amount").value),date=$("date").value;
- if(!Number.isFinite(amount)||amount<=0||amount>1e9||!validDate(date)||date>today()){
-  $("status").textContent="Enter a valid amount and date.";return;
- }
- const t=normalize({type:$("type").value,amount,category:$("category").value,date,note:$("note").value.trim()});
- if(!t)return;
- const old=data;data.push(t);
- if(save()){$("form").reset();$("date").value=today();$("status").textContent="Transaction saved.";}
- else data=old;
-});
-$("month").addEventListener("change",render);
-document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{
- filter=b.dataset.filter;
- document.querySelectorAll("[data-filter]").forEach(x=>x.classList.toggle("active",x===b));
- render();
-});
+    <section>
+      <h2>Transactions</h2>
 
-$("checkPurchase").onclick=()=>{
- const p=Number($("purchasePrice").value);
- const name=$("purchaseName").value.trim()||"This purchase";
- const bal=selectedRows().reduce((s,t)=>s+(t.type==="income"?t.amount:-t.amount),0);
- const out=$("purchaseResult");
- if(!Number.isFinite(p)||p<=0||p>1e9){out.textContent="Enter a valid purchase price.";return;}
- const after=bal-p;
- out.replaceChildren();
- const title=document.createElement("strong");
- title.textContent=after>=0?"It fits your recorded balance.":"It exceeds your recorded balance.";
- title.className=after>=0?"green":"red";
- const details=document.createElement("p");
- details.textContent=name+": "+money(p)+". Estimated balance after purchase: "+money(after)+".";
- const caveat=document.createElement("p");
- caveat.className="notice";
- caveat.textContent="This uses only recorded transactions for the selected month and does not account for unrecorded bills or emergencies.";
- out.append(title,details,caveat);
-};
+      <label for="filter">Show transactions</label>
+      <select id="filter">
+        <option value="all">All</option>
+        <option value="income">Income only</option>
+        <option value="expense">Expenses only</option>
+      </select>
 
-function download(name,content,type){
- const url=URL.createObjectURL(new Blob([content],{type}));
- const a=document.createElement("a");a.href=url;a.download=name;a.click();
- setTimeout(()=>URL.revokeObjectURL(url),1500);
-}
-$("backup").onclick=()=>{
- download("paisatrack-backup.json",JSON.stringify({app:"PaisaTrack",version:4,transactions:data},null,2),"application/json");
- $("backupStatus").textContent="JSON backup download started. Keep it safe.";
-};
-$("restore").onclick=async()=>{
- const file=$("restoreFile").files[0];
- if(!file){$("backupStatus").textContent="Choose a JSON file first.";return;}
- if(file.size>5*1024*1024){$("backupStatus").textContent="File is too large.";return;}
- try{
-  const parsed=JSON.parse(await file.text());
-  const items=Array.isArray(parsed)?parsed:parsed?.transactions;
-  if(!Array.isArray(items)||items.length>10000)throw Error("Invalid backup structure.");
-  nextId=1;const restored=[];
-  for(const t of items){const n=normalize(t);if(!n)throw Error("Invalid transaction. Nothing restored.");restored.push(n);}
-  if(!confirm("Replace current records with "+restored.length+" transactions? Download a backup first."))return;
-  const old=data;data=restored;
-  if(save()){$("backupStatus").textContent="Restore successful."; $("restoreFile").value="";}
-  else data=old;
- }catch(e){$("backupStatus").textContent="Restore failed: "+e.message;}
-};
-$("csv").onclick=()=>{
- const rows=[["Type","Amount","Category","Date","Description"],...data.map(t=>[t.type,t.amount,t.category,t.date,t.note])];
- const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
- download("paisatrack-backup.csv","\uFEFF"+csv,"text/csv;charset=utf-8");
-};
-render();
-</script>
- 
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js")
-      .catch((error) => {
-        console.error("PaisaTrack offline setup failed:", error);
+      <p id="transactionCount" class="muted"></p>
+      <div id="transactions"></div>
+    </section>
+
+    <section>
+      <h2>Backup and Export</h2>
+      <p class="muted">
+        Keep a JSON backup somewhere safe. CSV is useful for spreadsheets.
+        Restoring a JSON backup replaces the current transaction list.
+      </p>
+
+      <div class="actions">
+        <button type="button" id="backup" class="secondary">Download JSON backup</button>
+        <button type="button" id="csv" class="secondary">Export CSV</button>
+      </div>
+
+      <label for="restoreFile">Restore JSON backup</label>
+      <input type="file" id="restoreFile" accept=".json,application/json">
+      <button type="button" id="restore" class="secondary">Restore backup</button>
+      <p id="backupStatus" class="notice" role="status"></p>
+    </section>
+  </main>
+
+  <footer>PaisaTrack · Personal finance tracker · Version 5</footer>
+
+  <script>
+    "use strict";
+
+    const $ = id => document.getElementById(id);
+    const KEY = "paisatrack";
+    const LEGACY_KEY = "paisatrack_transactions_v1";
+    const CATS = [
+      "Food", "Travel", "Shopping", "Bills", "Health",
+      "Education", "Salary", "Business", "Other"
+    ];
+
+    let data = [];
+    let nextId = 1;
+    let filter = "all";
+
+    function today() {
+      const d = new Date();
+      return d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0");
+    }
+
+    function money(value) {
+      return Number(value || 0).toLocaleString("en-IN", {
+        style: "currency",
+        currency: "INR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
       });
-  });
-}
-</script>
- 
+    }
+
+    function validDate(value) {
+      if (typeof value !== "string" ||
+          !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return false;
+      }
+
+      const d = new Date(value + "T12:00:00");
+      return !Number.isNaN(d.getTime()) &&
+        d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0") === value;
+    }
+
+    function normalize(t) {
+      if (!t || typeof t !== "object") return null;
+
+      const amount = Number(t.amount);
+
+      if (!Number.isFinite(amount) || amount <= 0 || amount > 1e9) {
+        return null;
+      }
+
+      if (!["income", "expense"].includes(t.type)) return null;
+      if (!CATS.includes(t.category)) return null;
+      if (!validDate(t.date)) return null;
+      if (t.note !== undefined && typeof t.note !== "string") return null;
+
+      const id = t.id !== undefined && t.id !== null
+        ? String(t.id).slice(0, 100)
+        : String(nextId++);
+
+      return {
+        id,
+        type: t.type,
+        amount: Math.round((amount + Number.EPSILON) * 100) / 100,
+        category: t.category,
+        date: t.date,
+        note: String(t.note || "").slice(0, 80)
+      };
+    }
+
+    function loadData() {
+      let raw = null;
+
+      try {
+        raw = localStorage.getItem(KEY);
+
+        // Use the older key only if the current key does not exist.
+        if (raw === null) raw = localStorage.getItem(LEGACY_KEY);
+
+        const parsed = JSON.parse(raw || "[]");
+        if (!Array.isArray(parsed)) throw new Error("Invalid data format");
+
+        data = [];
+        parsed.forEach(item => {
+          const normalized = normalize(item);
+          if (normalized) data.push(normalized);
+        });
+
+        // Do not automatically overwrite storage during startup.
+        nextId = data.reduce((max, t) => {
+          const n = Number(t.id);
+          return Number.isSafeInteger(n) ? Math.max(max, n + 1) : max;
+        }, 1);
+      } catch (error) {
+        data = [];
+        $("status").textContent =
+          "Could not read saved data. Do not clear app storage. Check your JSON backup.";
+      }
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(data));
+        return true;
+      } catch (error) {
+        $("status").textContent =
+          "Save failed. Your changes may not be stored. Export or preserve your backup and check available browser storage.";
+        return false;
+      }
+    }
+
+    function selectedRows() {
+      const month = $("month").value;
+      if (!/^\d{4}-\d{2}$/.test(month)) return [];
+      return data.filter(t => t.date.startsWith(month));
+    }
+
+    function render() {
+      const rows = selectedRows();
+
+      const income = rows
+        .filter(t => t.type === "income")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const expenses = rows
+        .filter(t => t.type === "expense")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const balance = income - expenses;
+
+      $("income").textContent = money(income);
+      $("expenses").textContent = money(expenses);
+      $("balance").textContent = money(balance);
+      $("balance").className = balance < 0 ? "negative" : "positive";
+      $("remaining").textContent = money(balance);
+
+      const used = income > 0 ? Math.round((expenses / income) * 100) : 0;
+      $("used").textContent = income > 0 ? used + "%" : "N/A";
+      $("salaryProgress").value = income > 0
+        ? Math.max(0, Math.min(100, used))
+        : 0;
+
+      if (income === 0 && expenses === 0) {
+        $("salaryAdvice").textContent =
+          "No transactions for this month yet. Add your salary and expenses.";
+      } else if (income === 0 && expenses > 0) {
+        $("salaryAdvice").textContent =
+          "Expenses are recorded, but no income is recorded for this month.";
+      } else if (balance < 0) {
+        $("salaryAdvice").textContent =
+          "Warning: recorded expenses are higher than recorded income.";
+      } else if (used >= 80) {
+        $("salaryAdvice").textContent =
+          "Caution: you have used at least 80% of your recorded income.";
+      } else {
+        $("salaryAdvice").textContent =
+          "You have " + money(balance) + " remaining from recorded income.";
+      }
+
+      renderTransactions(rows);
+      $("overviewStatus").textContent =
+        rows.length + " transaction(s) for " + $("month").value + ".";
+    }
+
+    function renderTransactions(rows) {
+      const container = $("transactions");
+      container.replaceChildren();
+
+      const visible = rows
+        .filter(t => filter === "all" || t.type === filter)
+        .slice()
+        .sort((a, b) => b.date.localeCompare(a.date));
+
+      $("transactionCount").textContent =
+        visible.length + " transaction(s) shown";
+
+      if (visible.length === 0) {
+        const p = document.createElement("p");
+        p.className = "muted";
+        p.textContent = "No transactions match this month and filter.";
+        container.appendChild(p);
+        return;
+      }
+
+      visible.forEach(t => {
+        const item = document.createElement("article");
+        item.className = "transaction";
+
+        const details = document.createElement("div");
+        const title = document.createElement("strong");
+        title.textContent = t.note || t.category;
+
+        const meta = document.createElement("p");
+        meta.className = "muted";
+        meta.textContent = t.category + " · " + t.date;
+
+        details.append(title, meta);
+
+        const right = document.createElement("div");
+        right.className = "amount";
+
+        const amount = document.createElement("strong");
+        amount.className = t.type === "income" ? "positive" : "negative";
+        amount.textContent = (t.type === "income" ? "+" : "−") + money(t.amount);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "danger";
+        remove.textContent = "Delete";
+        remove.setAttribute("aria-label", "Delete " + (t.note || t.category));
+        remove.addEventListener("click", () => deleteTransaction(t.id));
+
+        right.append(amount, remove);
+        item.append(details, right);
+        container.appendChild(item);
+      });
+    }
+
+    function deleteTransaction(id) {
+      const t = data.find(item => item.id === id);
+      if (!t) return;
+
+      if (!confirm("Delete this transaction? This cannot be undone unless you have a backup.")) {
+        return;
+      }
+
+      const previous = data;
+      data = data.filter(item => item.id !== id);
+
+      if (saveData()) {
+        $("status").textContent = "Transaction deleted.";
+        render();
+      } else {
+        data = previous;
+      }
+    }
+
+    $("form").addEventListener("submit", event => {
+      event.preventDefault();
+      $("status").textContent = "";
+
+      const amount = Number($("amount").value);
+      const date = $("date").value;
+      const type = $("type").value;
+      const category = $("category").value;
+      const note = $("note").value.trim();
+
+      if (!Number.isFinite(amount) || amount <= 0 || amount > 1e9) {
+        $("status").textContent = "Enter an amount greater than zero and no more than ₹1,000,000,000.";
+        return;
+      }
+
+      if (!validDate(date)) {
+        $("status").textContent = "Choose a valid transaction date.";
+        return;
+      }
+
+      // Future dates are allowed for scheduled salary or planned transactions.
+      const transaction = normalize({
+        id: String(nextId),
+        type,
+        amount,
+        category,
+        date,
+        note
+      });
+
+      if (!transaction) {
+        $("status").textContent =
+          "Could not validate this transaction. Check the type, category, amount and date.";
+        return;
+      }
+
+      const previousData = data;
+      const previousMonth = $("month").value;
+
+      data = data.concat(transaction);
+      $("month").value = date.slice(0, 7);
+
+      if (saveData()) {
+        nextId++;
+        render();
+        $("form").reset();
+        $("date").value = today();
+        $("status").textContent =
+          (type === "income" && category === "Salary"
+            ? "Salary saved successfully."
+            : "Transaction saved successfully.") +
+          " Month: " + date.slice(0, 7) + ".";
+      } else {
+        data = previousData;
+        $("month").value = previousMonth;
+        render();
+      }
+    });
+
+    $("month").addEventListener("change", render);
+
+    $("filter").addEventListener("change", event => {
+      filter = event.target.value;
+      render();
+    });
+
+    $("simulate").addEventListener("click", () => {
+      const value = $("purchase").value.trim();
+      const amount = Number(value);
+
+      if (value === "" || !Number.isFinite(amount) || amount < 0 || amount > 1e9) {
+        $("simulation").textContent = "Enter a valid purchase amount.";
+        return;
+      }
+
+      const rows = selectedRows();
+      const income = rows
+        .filter(t => t.type === "income")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const expenses = rows
+        .filter(t => t.type === "expense")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const afterPurchase = income - expenses - amount;
+
+      $("simulation").textContent = afterPurchase < 0
+        ? "After this purchase, your recorded monthly balance would be " +
+          money(afterPurchase) + ". Think carefully before spending."
+        : "After this purchase, your recorded monthly balance would be " +
+          money(afterPurchase) + ".";
+
+      $("simulation").className =
+        "notice " + (afterPurchase < 0 ? "negative" : "positive");
+    });
+
+    function downloadFile(filename, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    $("backup").addEventListener("click", () => {
+      try {
+        downloadFile(
+          "paisatrack-backup-" + today() + ".json",
+          JSON.stringify(data, null, 2),
+          "application/json"
+        );
+        $("backupStatus").textContent = "JSON backup download started.";
+      } catch (error) {
+        $("backupStatus").textContent = "Backup could not be created.";
+      }
+    });
+
+    $("csv").addEventListener("click", () => {
+      const rows = [
+        ["Date", "Type", "Category", "Amount", "Description"],
+        ...data.map(t => [t.date, t.type, t.category, t.amount, t.note])
+      ];
+
+      const csv = rows.map(row =>
+        row.map(value =>
+          '"' + String(value).replace(/"/g, '""') + '"'
+        ).join(",")
+      ).join("\r\n");
+
+      downloadFile(
+        "paisatrack-transactions-" + today() + ".csv",
+        "\uFEFF" + csv,
+        "text/csv;charset=utf-8"
+      );
+
+      $("backupStatus").textContent = "CSV export download started.";
+    });
+
+    $("restore").addEventListener("click", async () => {
+      const file = $("restoreFile").files[0];
+
+      if (!file) {
+        $("backupStatus").textContent = "Choose a JSON backup file first.";
+        return;
+      }
+
+      if (!confirm(
+        "Restoring replaces the current transaction list. " +
+        "Download a fresh backup first if you want to keep the current records. Continue?"
+      )) {
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(await file.text());
+
+        if (!Array.isArray(parsed)) {
+          throw new Error("The backup must contain a transaction array.");
+        }
+
+        const restored = [];
+        let tempId = 1;
+
+        parsed.forEach(item => {
+          const normalized = normalize(item);
+          if (normalized) {
+            normalized.id = String(tempId++);
+            restored.push(normalized);
+          }
+        });
+
+        if (parsed.length > 0 && restored.length === 0) {
+          throw new Error("No valid transactions were found in this backup.");
+        }
+
+        const previousData = data;
+        data = restored;
+
+        if (!saveData()) {
+          data = previousData;
+          throw new Error("Storage failed. Current in-memory data was retained.");
+        }
+
+        nextId = tempId;
+        render();
+        $("backupStatus").textContent =
+          "Backup restored. " + restored.length + " transaction(s) loaded.";
+      } catch (error) {
+        $("backupStatus").textContent =
+          "Restore failed: " + (error.message || "Invalid backup file.");
+      }
+    });
+
+    // Initialize without rewriting the user's stored data.
+    $("month").value = today().slice(0, 7);
+    $("date").value = today();
+    loadData();
+    render();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .catch(error => {
+            console.error("PaisaTrack offline setup failed:", error);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
