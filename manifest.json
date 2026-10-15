@@ -1,1 +1,27 @@
 
+{
+  "id": "./",
+  "name": "PaisaTrack Money Coach",
+  "short_name": "PaisaTrack",
+  "description": "Track expenses, understand your budget, and make smarter spending decisions.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7fb",
+  "theme_color": "#14532d",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
